@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<script src="./js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="./css/sample.css">
+<title>じゃんけん</title>
+</head>
+<body>
+<header>
+  <h1>じゃんけん</h1>
+    <div>現在のスコア: <span id="score">0</span>点</div>
+  <div>残り: <span id="remaining">3</span>回</div>
+
+  <button id="reset"><img src="./img/reset.jpg" alt="" height="100" width="100"></button>
+</header>
+
+<main>
+  <ul>
+    <li id="gu"><img src="./img/gu1.jpg" alt="" height="200" width="200"></li>
+    <li id="cho"><img src="./img/cho1.jpg" alt="" height="200" width="200"></li>
+    <li id="par"><img src="./img/par1.jpg" alt="" height="200" width="200"></li>
+  </ul>
+  <p id="echo"></p>
+</main>
+
+<div id="gameoverOverlay">
+  <img src="./img/GAMEOVER.jpg" alt="GAME OVER">
+</div>
+
+<footer></footer>
+<script>
+//じゃんけん用のSCRIPTを書いてください
+
+//==============================
+// 状態を覚えておく変数たち
+//==============================
+
+// 合計得点。最初は0点。
+let score = 0;
+
+// 残り回数。最初は3回。
+let remaining = 3;
+
+// ゲームオーバー中かどうか。
+// false = まだゲーム中 / true = ゲームオーバー後
+let isGameOver = false;
+
+
+//====================================================
+// GameOverを一度だけ表示して、2秒後に完全に消す関数
+//====================================================
+function showGameOverOnce() {
+  // すでにゲームオーバーなら、何もしないで終わり
+  if (isGameOver) return;
+
+  // 「ゲームオーバー状態」にする
+  isGameOver = true;
+
+  // 黒いオーバーレイ＋GAMEOVER画像を表示
+  // （CSSの .show にアニメーションが設定されている）
+  $("#gameoverOverlay").addClass("show");
+
+  // 2秒後（CSSの animation と同じ時間）に完全に消す
+  setTimeout(function() {
+    // .show を外して、display:none にする
+    $("#gameoverOverlay").removeClass("show").hide();
+  }, 2000);
+}
+
+
+//==============================
+// ぐー が押されたとき
+//==============================
+$("#gu").on("click", function() {
+  // ゲームオーバー中は何もしない
+  if (isGameOver) return;
+
+  // 残り回数が0以下なら、じゃんけん処理はせずゲームオーバー演出へ
+  if (remaining <= 0) {
+    showGameOverOnce();
+    return;
+  }
+
+  // 1〜3の乱数を作る（1=ぐー, 2=ちょき, 3=ぱー）
+  const r = Math.ceil(Math.random() * 3);
+
+  // この1回の得点
+  let points = 0;
+
+  if (r === 1) {
+    // 相手もぐー → あいこ（+1点）
+    points = 1;
+    $("#echo").html("<img src='./img/gu2.jpg' height='200' width='200'><br>あいこ");
+  } else if (r === 2) {
+    // 相手ちょき → 勝ち（+2点）
+    points = 2;
+    $("#echo").html("<img src='./img/cho1.jpg' height='200' width='200'><br>勝ち");
+  } else if (r === 3) {
+    // 相手ぱー → 負け（+0点）
+    points = 0;
+    $("#echo").html("<img src='./img/par1.jpg' height='200' width='200'><br>負け");
+  }
+
+  // 2秒後に結果表示を消す
+  setTimeout(function(){ $("#echo").html(""); }, 2000);
+
+  // 合計得点を更新
+  score += points;
+
+  // 残り回数を1減らす
+  remaining -= 1;
+
+  // 画面表示を更新
+  $("#score").text(score);
+  $("#remaining").text(remaining);
+});
+
+
+//==============================
+// ちょき が押されたとき
+//==============================
+$("#cho").on("click", function() {
+  if (isGameOver) return;
+
+  if (remaining <= 0) {
+    showGameOverOnce();
+    return;
+  }
+
+  const r = Math.ceil(Math.random() * 3);
+  let points = 0;
+
+  if (r === 1) {
+    // 相手ぐー → 負け
+    points = 0;
+    $("#echo").html("<img src='./img/gu1.jpg' height='200' width='200'><br>負け");
+  } else if (r === 2) {
+    // 相手ちょき → あいこ
+    points = 1;
+    $("#echo").html("<img src='./img/cho2.jpg' height='200' width='200'><br>あいこ");
+  } else if (r === 3) {
+    // 相手ぱー → 勝ち
+    points = 2;
+    $("#echo").html("<img src='./img/par1.jpg' height='200' width='200'><br>勝ち");
+  }
+
+  setTimeout(function(){ $("#echo").html(""); }, 2000);
+
+  score += points;
+  remaining -= 1;
+  $("#score").text(score);
+  $("#remaining").text(remaining);
+});
+
+
+//==============================
+// ぱー が押されたとき
+//==============================
+$("#par").on("click", function() {
+  if (isGameOver) return;
+
+  if (remaining <= 0) {
+    showGameOverOnce();
+    return;
+  }
+
+  let points = 0;
+  const r = Math.ceil(Math.random() * 3);
+
+  if (r === 1) {
+    // 相手ぐー → 勝ち
+    points = 2;
+    $("#echo").html("<img src='./img/gu1.jpg' height='200' width='200'><br>勝ち");
+  } else if (r === 2) {
+    // 相手ちょき → 負け
+    points = 0;
+    $("#echo").html("<img src='./img/cho1.jpg' height='200' width='200'><br>負け");
+  } else if (r === 3) {
+    // 相手ぱー → あいこ
+    points = 1;
+    $("#echo").html("<img src='./img/par2.jpg' height='200' width='200'><br>あいこ");
+  }
+
+  setTimeout(function(){ $("#echo").html(""); }, 2000);
+
+  score += points;
+  remaining -= 1;
+  $("#score").text(score);
+  $("#remaining").text(remaining);
+});
+
+
+//==============================
+// リセットボタン
+//==============================
+$("#reset").on("click", function() {
+  // ページを再読み込みして最初の状態に戻す
+  location.reload();
+});
+
+// reset https://bobu.work/caculation/
+$("#reset").on("click", function(){
+  location.reload();  // ページを再読み込み
+});
+
+
+// できたらしたいもの
+// https://qiita.com/tsuyopon_xyz/items/ed2e244da8225eb31b68
+</script>
+</body>
+</html>

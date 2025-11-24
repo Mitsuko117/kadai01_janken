@@ -1,0 +1,91 @@
+body{
+    margin:0;
+    padding:0;
+    text-align:left;
+    font-size: 32px;
+}
+header{
+    background-color: #fff;
+    /* border-bottom: 1px solid #ccc; */
+    text-align: center;
+}
+main{
+    /* border-bottom:1px solid #ccc; */
+}
+footer{
+    background-color: #fff;
+    /* border-bottom:1px solid #ccc; */
+    text-align: center;
+}
+p{
+    font-size:200%;
+    text-align: center;
+    border-bottom:1px solid #fff;
+    height: 25px;
+}
+ul{
+    padding: 10;
+    /* border-top: 1px solid #000000; */
+    display:table;  /* 定義 */
+    table-layout: fixed;
+    width:100%;
+}
+li{
+    padding: 20px;
+    text-align: center;
+    list-style-type:none;
+    /* border: 1px solid #666; */
+    background-color: #FFF;
+    display:table-cell;  /* 定義 */
+    cursor: pointer;
+    overflow: hidden; 
+}
+li img{
+    transition: transform 0.3s ease;  
+}
+li:hover img{
+    transform: scale(1.2);  
+}
+
+#reset {
+  padding: 30px;
+  border: none;       /* 通常時の枠線を消す */
+  outline: none;      /* クリックやフォーカス時の線を消す */
+  background: transparent;
+}
+
+#reset:focus,
+#reset:active {
+  outline: none;
+  border: none;
+  box-shadow: none;   /* 影で縁が付いている場合用 */
+}
+
+#gameoverOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;   /* 下のリセットボタンへのクリックを通す */
+}
+
+/* 表示中だけ .show が付く */
+#gameoverOverlay.show {
+  display: flex;
+}
+
+/* GAMEOVER画像の拡大アニメーション */
+#gameoverOverlay img {
+  max-width: 20vw;
+  max-height: 20vh;
+  animation: gameoverZoom 2s forwards;   /* 2秒で大きくなって消える */
+}
+
+@keyframes gameoverZoom {
+  0%   { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(3);   opacity: 0; }
+}
+
